@@ -26,8 +26,8 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 npm install -g firebase-tools
 npm install -g vue-cli
 
-view init webpack ballot-labo
-cd ballot-labo
+view init webpack rhd2018-ballot
+cd rhd2018-ballot
 
 npm run start
 
@@ -36,4 +36,11 @@ firebase init
 
 firebase serve
 firebase deploy
+```
+
+## 追加ライブラリ
+```
+npm install --save-dev bulma sass-loader node-sass 
+npm install --save @fortawesome/fontawesome-free-webfonts
+npm install --save firebase vuefire
 ```
