@@ -62,12 +62,12 @@
 <script>
 export default {
   name: 'top',
-  data () {
+  data() {
     return {
-      msg: 'Welcome to BALLOT'
-    }
-  }
-}
+      msg: 'Welcome to BALLOT',
+    };
+  },
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
