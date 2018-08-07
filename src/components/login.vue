@@ -23,17 +23,23 @@ export default {
   },
   methods: {
     login(username) {
-      auth.signInAnonymously().then(res =>
-        usersRef.child(res.user.uid).set({
-          name: username,
-        }),
-      ).then(() => {
-        auth.currentUser.updateProfile({
-          displayName: username,
+      auth.signInAnonymously()
+        .then(res =>
+          usersRef.child(res.user.uid).set({
+            name: username,
+          }),
+        )
+        .then(() => {
+          auth.currentUser.updateProfile({
+            displayName: username,
+          });
+        })
+        .then(() => {
+          this.$router.push('/vote');
+        })
+        .catch((e) => {
+          console.error(e);
         });
-      }).catch((e) => {
-        console.error(e);
-      });
     },
   },
 };
