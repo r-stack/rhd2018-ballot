@@ -1,10 +1,29 @@
 <template>
-  <div class="login">
-    <h1 class="title is-size-4">Enter your name</h1>
-    <input class="input is-large" type="text" key="username-input" v-model="username" />
-    <button class="button is-block is-large is-fullwidth"
-     @click="login(username)" :disabled="!username">Login!</button>
-  </div>
+  <section class="login hero is-success is-fullheight">
+    <div class="hero-body">
+      <div class="container has-text-centered">
+        <div class="column is-4 is-offset-4">
+          <h3 class="title has-text-grey">Login</h3>
+          <p class="subtitle has-text-grey">Please login to proceed.</p>
+          <div class="box">
+            <figure class="avatar">
+              <img src="https://placehold.it/128x128">
+            </figure>
+            <form>
+              <div class="field">
+                <div class="control">
+                  <input class="input is-large" type="text" placeholder="Your Name" autofocus=""
+                         v-model="username" />
+                </div>
+              </div>
+              <button class="button is-block is-info is-large is-fullwidth"
+                      @click="login(username)" :disabled="!username">Login</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 </template>
 
 <script>
@@ -15,7 +34,6 @@ const usersRef = db.ref('users');
 export default {
   name: 'login',
   data() {
-    // TODO: Get auth info before routing
     const username = auth.currentUser ? auth.currentUser.displayName : '';
     return {
       username,
