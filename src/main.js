@@ -9,7 +9,7 @@ import VueFire from 'vuefire';
 import Vue from 'vue';
 import App from './App';
 import router from './router';
-
+import { auth } from './firebase';
 
 Vue.config.productionTip = false;
 
@@ -21,4 +21,17 @@ new Vue({
   router,
   components: { App },
   template: '<App/>',
+  created() {
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        // if logged in, jump to vote page
+        this.$router.push('/vote');
+      } else {
+        // if not, jump to login page
+        this.$router.push('/login');
+      }
+    }, (e) => {
+      console.error(e);
+    });
+  },
 });
