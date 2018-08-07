@@ -7,6 +7,18 @@
           ".write": "$user == auth.uid",
           ".validate": "newData.isString() && newData.val().length <= 63"
         },
+        "surpriseVote": {
+          ".write": "$user == auth.uid",
+          ".validate": "newData.isNumber()"
+        },
+        "impressionVote": {
+          ".write": "$user == auth.uid",
+          ".validate": "newData.isNumber()"
+        },
+        "techVote": {
+          ".write": "$user == auth.uid",
+          ".validate": "newData.isNumber()"
+        },
         "admin": {
           ".write": false,
           ".validate": "newData.isBoolean()"
