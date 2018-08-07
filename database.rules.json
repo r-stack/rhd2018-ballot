@@ -1,6 +1,33 @@
 {
   "rules": {
-    ".read": true,
-    ".write": true
+    "users": {
+      "$user": {
+        ".read": "$user == auth.uid || root.child('users').child(auth.uid).child('admin').val() == true",
+        "name": {
+          ".write": "$user == auth.uid",
+          ".validate": "newData.isString() && newData.val().length <= 63"
+        },
+        "admin": {
+          ".write": false,
+          ".validate": "newData.isBoolean()"
+        }
+      }
+    },
+    "teams": {
+      ".read": "auth != null",
+      ".write": false,
+      "$team": {
+        "name": {
+          ".validate": "newData.isString() && newData.val().length <= 63"
+        }
+      }
+    },
+    "meta": {
+      ".read": "auth != null",
+      ".write": "root.child('users').child(auth.uid).child('admin').val() == true",
+      "status": {
+        ".validate": "newData.isString() && (newData.val() == 'open' || newData.val() == 'closed')"
+      }
+    }
   }
 }

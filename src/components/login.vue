@@ -17,7 +17,9 @@
                 </div>
               </div>
               <button class="button is-block is-info is-large is-fullwidth"
-                      @click="login(username)" :disabled="!username">Login</button>
+                      @click="login(username)" :disabled="!username || username.length > 63">
+                      Login
+              </button>
             </form>
           </div>
         </div>
@@ -41,6 +43,7 @@ export default {
   },
   methods: {
     login(username) {
+      // TODO: if username.length > 63, show error message
       auth.signInAnonymously()
         .then(res =>
           usersRef.child(res.user.uid).set({
