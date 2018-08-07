@@ -37,8 +37,8 @@
     "meta": {
       ".read": "auth != null",
       ".write": "root.child('users').child(auth.uid).child('admin').val() == true",
-      "status": {
-        ".validate": "newData.isString() && (newData.val() == 'open' || newData.val() == 'closed')"
+      "isOpen": {
+        ".validate": "newData.isBoolean()"
       }
     }
   }

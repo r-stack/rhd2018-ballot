@@ -27,7 +27,7 @@ export default new Router({
       component: vote,
     },
     {
-      path: 'admin',
+      path: '/admin',
       name: 'Admin',
       component: admin,
     },
