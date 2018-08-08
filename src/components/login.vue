@@ -45,11 +45,9 @@ export default {
     login(username) {
       // TODO: if username.length > 63, show error message
       auth.signInAnonymously()
-        .then(res =>
-          usersRef.child(res.user.uid).set({
-            name: username,
-          }),
-        )
+        .then(res => usersRef.child(res.user.uid).set({
+          name: username,
+        }))
         .then(() => {
           auth.currentUser.updateProfile({
             displayName: username,
