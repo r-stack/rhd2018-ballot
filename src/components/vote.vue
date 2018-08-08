@@ -16,7 +16,7 @@
                 <label class="label">驚き</label>
                 <div class="control has-icons-left has-icons-right">
                   <div class="select is-fullwidth">
-                    <select v-model="odo">
+                    <select v-model="user.surpriseVote">
                       <option value="0">----</option>
                       <option value="1">Team 1</option>
                       <option value="2">Team 2</option>
@@ -42,7 +42,7 @@
                 <label class="label">感動</label>
                 <div class="control has-icons-left has-icons-right">
                   <div class="select is-fullwidth">
-                    <select v-model="kan">
+                    <select v-model="user.impressionVote">
                       <option value="0">----</option>
                       <option value="1">Team 1</option>
                       <option value="2">Team 2</option>
@@ -68,7 +68,7 @@
                 <label class="label">技術</label>
                 <div class="control has-icons-left has-icons-right">
                   <div class="select is-fullwidth">
-                    <select v-model="tech">
+                    <select v-model="user.techVote">
                       <option value="0">----</option>
                       <option value="1">Team 1</option>
                       <option value="2">Team 2</option>
@@ -87,7 +87,7 @@
                     <i class="fas fa-exclamation-triangle"></i>
                   </span>
                 </div>
-                <p class="help">いいね、使ってみたい</p>
+                <p class="help">技術的にすごい、完成度がすごい</p>
               </div>
               <button type="submit" class="button is-large is-primary is-rounded">
                 <span class="icon is-medium">
@@ -106,18 +106,21 @@
 
 <script>
 import { auth, db } from '@/firebase';
-// const ballotRef = db.ref(`/users/${auth.currentUser.uid}`);
+const ballotRef = db.ref(`/users/`);
 export default {
   name: 'Vote',
   data() {
     console.log(auth, db);
     return {
       msg: '投票',
-      odo: 0,
-      kan: 0,
-      tech: 0,
       comment: '',
       name: '',
+      user: {
+        'surpriseVote':"0",
+        'impressionVote':"0",
+        "techVote":"0",
+      },
+      meta: undefined,
     };
   },
   beforeCreate: function(){
@@ -129,12 +132,86 @@ export default {
       }
     })
   },
-  firebase: {
-    ballot: `/users/`,
+  created() {
+    const metaRef = db.ref('meta');
+    this.createdPromise = new Promise((resolve, reject) => {
+      auth.onAuthStateChanged((user) => {
+        if (user) {
+          // if logged in
+          resolve();
+        } else {
+          // if not
+          reject(Error('not logged in'));
+        }
+      }, (e) => {
+        reject(e);
+      });
+    })
+    .then(() => new Promise((resolve, reject) => {
+      this.$bindAsObject('meta', metaRef, () => {
+        reject(Error('cannot bind meta'));
+      }, () => {
+        resolve();
+      });
+    }))
+    .then(() => new Promise((resolve, reject) => {
+      this.userRef = db.ref('users/' + auth.currentUser.uid)
+      this.$bindAsObject('user', this.userRef, () => {
+        reject(Error('cannot bind user'));
+      }, () => {
+        resolve();
+      });
+    }))
+    
+    ;
+
+  },
+  mounted() {
+    this.createdPromise
+      .then(() => {
+        console.log(this.meta.isOpen);
+        this.statusSwitch = this.meta.isOpen;
+      })
+      .catch((e) => {
+        console.error(e);
+      });
   },
   methods:{
     vote: function() {
       console.log("vote form submitted.");
+      console.log(this.user.surpriseVote);
+      console.log(this.user.impressionVote);
+      console.log(this.user.techVote);
+      if(!this.user.surpriseVote || this.user.surpriseVote === '0'){
+        console.log("surpriseVote is required.");
+        return;
+      }
+      if(!this.user.impressionVote || this.user.impressionVote === '0'){
+        console.log("impressionVote is required.");
+        return;
+      }
+      if(!this.user.techVote || this.user.techVote === '0'){
+        console.log("techVote is required.");
+        return;
+      }
+      if(!this.userRef){
+        console.log("no this.userRef");
+        return;
+      }
+      this.userRef.update({
+        'surpriseVote': this.user.surpriseVote,
+        'impressionVote': this.user.impressionVote,
+        'techVote': this.user.techVote,
+      }, function(error){
+        if(error){
+          console.log("Failed vote", error);
+        }else{
+          console.log("Vote successfully.");
+          alert("Voted");
+        }
+      })
+
+
     },
   },
 };
