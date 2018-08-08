@@ -5,7 +5,9 @@ import '@fortawesome/fontawesome-free-webfonts/css/fa-brands.css';
 import '@fortawesome/fontawesome-free-webfonts/css/fa-regular.css';
 import '@fortawesome/fontawesome-free-webfonts/css/fa-solid.css';
 import 'bulma-switch/dist/css/bulma-switch.min.css';
+import 'buefy/lib/buefy.css'
 import VueFire from 'vuefire';
+import Buefy from 'buefy'
 
 import Vue from 'vue';
 import App from './App';
