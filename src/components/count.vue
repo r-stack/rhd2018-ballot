@@ -1,113 +1,147 @@
 <template>
-  <div class="count">
-    <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
-    <ul>
-      <li>
-        <a
-          href="https://vuejs.org"
-          target="_blank"
-        >
-          Core Docs
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://forum.vuejs.org"
-          target="_blank"
-        >
-          Forum
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://chat.vuejs.org"
-          target="_blank"
-        >
-          Community Chat
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://twitter.com/vuejs"
-          target="_blank"
-        >
-          Twitter
-        </a>
-      </li>
-      <br>
-      <li>
-        <a
-          href="http://vuejs-templates.github.io/webpack/"
-          target="_blank"
-        >
-          Docs for This Template
-        </a>
-      </li>
-    </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li>
-        <a
-          href="http://router.vuejs.org/"
-          target="_blank"
-        >
-          vue-router
-        </a>
-      </li>
-      <li>
-        <a
-          href="http://vuex.vuejs.org/"
-          target="_blank"
-        >
-          vuex
-        </a>
-      </li>
-      <li>
-        <a
-          href="http://vue-loader.vuejs.org/"
-          target="_blank"
-        >
-          vue-loader
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/awesome-vue"
-          target="_blank"
-        >
-          awesome-vue
-        </a>
-      </li>
-    </ul>
-  </div>
+  <section id="count" class="hero is-success is-fullheight">
+    <div class="hero-body">
+      <div class="container has-text-centered">
+        <div class="column is-4 is-offset-4">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Team#</th>
+                <th>驚き点</th>
+                <th>感動点</th>
+                <th>技術点</th>
+                <th>合計点</th>
+              </tr>
+              <tr v-for="team in teams">
+                <td>{{team.teamId}}</td>
+                <td>{{team.surprisePoint}}</td>
+                <td>{{team.impressionPoint}}</td>
+                <td>{{team.techPoint}}</td>
+                <td>{{team.totalPoint}}</td>
+              </tr>
+            </thead>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
 </template>
 
 <script>
+import { auth, db } from './../firebase';
+import _ from 'underscore';
+
 export default {
-  name: 'HelloWorld',
+  name: 'count',
   data() {
     return {
-      msg: 'Welcome to Your Vue.js App',
+      uRef: db.ref('users'),
+      users: undefined,
+      meta: undefined,
     };
+  },
+  firebase: {
+    users: db.ref('users'),
+  },
+  created() {
+    const metaRef = db.ref('meta');
+    const usersRef = db.ref('users');
+    this.createdPromise = new Promise((resolve, reject) => {
+      auth.onAuthStateChanged((user) => {
+        if (user) {
+          // if logged in
+          resolve();
+        } else {
+          // if not
+          reject(Error('not logged in'));
+        }
+      }, (e) => {
+        reject(e);
+      });
+    })
+      .then(() => new Promise((resolve, reject) => {
+        this.$bindAsArray('users', usersRef, () => {
+          reject(Error('cannot bind users'));
+        }, () => {
+          resolve();
+        });
+      }))
+      .then(() => new Promise((resolve, reject) => {
+        this.$bindAsObject('meta', metaRef, () => {
+          reject(Error('cannot bind meta'));
+        }, () => {
+          resolve();
+        });
+      }));
+  },
+  mounted() {
+    this.createdPromise
+      .then(() => {
+        console.log('ok');
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  },
+  computed: {
+    teams() {
+      const surprisePoints = _.pluck(this.users, 'surpriseVote');
+      const impressionPoints = _.pluck(this.users, 'impressionVote');
+      const techPoints = _.pluck(this.users, 'techVote');
+      const teamPoints = new Array();
+      for (let i = 0; i < 8; i++) {
+        teamPoints[i] = {
+          teamId: (i + 1).toString(),
+          surprisePoint: _.filter(surprisePoints, p => p === (i + 1).toString()).length,
+          impressionPoint: _.filter(impressionPoints, p => p === (i + 1).toString()).length,
+          techPoint: _.filter(techPoints, p => p === (i + 1).toString()).length,
+        }
+      }
+      for (let i = 0; i < 8; i++) {
+        let teamPoint = teamPoints[i]
+        teamPoints[i].totalPoint = teamPoint.surprisePoint + teamPoint.impressionPoint + teamPoint.techPoint;
+      }
+      return teamPoints;
+    },
   },
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1, h2 {
-  font-weight: normal;
+html,body {
+  font-family: 'Open Sans', serif;
+  font-size: 14px;
+  font-weight: 300;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
+.hero.is-success {
+  background: #F2F6FA;
 }
-li {
-  display: inline-block;
-  margin: 0 10px;
+.hero .nav, .hero.is-success .nav {
+  -webkit-box-shadow: none;
+  box-shadow: none;
 }
-a {
-  color: #42b983;
+.box {
+  margin-top: 5rem;
+}
+.avatar {
+  margin-top: -70px;
+  padding-bottom: 20px;
+}
+.avatar img {
+  padding: 5px;
+  background: #fff;
+  border-radius: 50%;
+  -webkit-box-shadow: 0 2px 3px rgba(10,10,10,.1), 0 0 0 1px rgba(10,10,10,.1);
+  box-shadow: 0 2px 3px rgba(10,10,10,.1), 0 0 0 1px rgba(10,10,10,.1);
+}
+input {
+  font-weight: 300;
+}
+p {
+  font-weight: 700;
+}
+p.subtitle {
+  padding-top: 1rem;
 }
 </style>
