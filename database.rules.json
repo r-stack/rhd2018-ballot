@@ -3,25 +3,18 @@
     "users": {
       "$user": {
         ".read": "$user == auth.uid || root.child('users').child(auth.uid).child('admin').val() == true",
+        ".write": "$user == auth.uid",
         "name": {
-          ".write": "$user == auth.uid",
           ".validate": "newData.isString() && newData.val().length <= 63"
         },
         "surpriseVote": {
-          ".write": "$user == auth.uid",
           ".validate": "newData.isNumber()"
         },
         "impressionVote": {
-          ".write": "$user == auth.uid",
           ".validate": "newData.isNumber()"
         },
         "techVote": {
-          ".write": "$user == auth.uid",
           ".validate": "newData.isNumber()"
-        },
-        "admin": {
-          ".write": false,
-          ".validate": "newData.isBoolean()"
         }
       }
     },
@@ -39,6 +32,13 @@
       ".write": "root.child('users').child(auth.uid).child('admin').val() == true",
       "isOpen": {
         ".validate": "newData.isBoolean()"
+      }
+    },
+    "admins": {
+      ".read": "auth != null",
+      ".write": false,
+      "$admin": {
+        ".validate": "newData.isString()"
       }
     }
   }
