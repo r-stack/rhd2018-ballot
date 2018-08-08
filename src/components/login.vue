@@ -45,7 +45,7 @@ export default {
     login(username) {
       // TODO: if username.length > 63, show error message
       auth.signInAnonymously()
-        .then(res => usersRef.child(res.user.uid).set({
+        .then(res => usersRef.child(res.user.uid).update({
           name: username,
         }))
         .then(() => {
