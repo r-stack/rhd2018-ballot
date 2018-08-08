@@ -15,6 +15,9 @@
         },
         "techVote": {
           ".validate": "newData.isNumber()"
+        },
+        "admin": {
+          ".validate": "newData.isBoolean()"
         }
       }
     },
