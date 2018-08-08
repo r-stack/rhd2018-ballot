@@ -7,7 +7,7 @@
           <p class="subtitle has-text-grey">Please login to vote.</p>
           <div class="box">
             <figure class="avatar">
-              <img src="https://placehold.it/128x128">
+              <img src="./../assets/r-stack.png">
             </figure>
             <form>
               <div class="field">
@@ -94,6 +94,7 @@ html,body {
 }
 .avatar img {
   padding: 5px;
+  width: 128px;
   background: #fff;
   border-radius: 50%;
   -webkit-box-shadow: 0 2px 3px rgba(10,10,10,.1), 0 0 0 1px rgba(10,10,10,.1);
