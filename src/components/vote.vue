@@ -89,7 +89,7 @@
                 </div>
                 <p class="help">技術的にすごい、完成度がすごい</p>
               </div>
-              <button type="submit" class="button is-large is-primary is-rounded">
+              <button type="submit" class="button is-large is-primary is-rounded" :disabled="!meta.isOpen">
                 <span class="icon is-medium">
                   <i class="fas fa-box-open"></i>
                 </span>
@@ -120,7 +120,7 @@ export default {
         'impressionVote':"0",
         "techVote":"0",
       },
-      meta: undefined,
+      meta: {isOpen: false},
     };
   },
   beforeCreate: function(){
@@ -178,25 +178,54 @@ export default {
   },
   methods:{
     vote: function() {
-      const self = this;
       console.log("vote form submitted.");
       console.log(this.user.surpriseVote);
       console.log(this.user.impressionVote);
       console.log(this.user.techVote);
+      const self = this;
+      if(this.meta && !this.meta.isOpen){
+        console.log("isOpen=", this.meta.isOpen);
+        this.$toast.open({
+              message: '現在投票はできません',
+              position: 'is-bottom',
+              type: 'is-primary',
+        });
+        return;
+      }
       if(!this.user.surpriseVote || this.user.surpriseVote === '0'){
         console.log("surpriseVote is required.");
+        this.$toast.open({
+              message: '全部入力してください',
+              position: 'is-bottom',
+              type: 'is-danger',
+        });
         return;
       }
       if(!this.user.impressionVote || this.user.impressionVote === '0'){
         console.log("impressionVote is required.");
+        this.$toast.open({
+              message: '全部入力してください',
+              position: 'is-bottom',
+              type: 'is-danger',
+        });
         return;
       }
       if(!this.user.techVote || this.user.techVote === '0'){
         console.log("techVote is required.");
+        this.$toast.open({
+              message: '全部入力してください',
+              position: 'is-bottom',
+              type: 'is-danger',
+        });
         return;
       }
       if(!this.userRef){
         console.log("no this.userRef");
+        this.$toast.open({
+              message: '1秒後にもっかい投票してね',
+              position: 'is-bottom',
+              type: 'is-danger',
+        });
         return;
       }
       this.userRef.update({
