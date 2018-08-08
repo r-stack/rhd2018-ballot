@@ -1,102 +1,149 @@
 <template>
-  <div class="vote">
-    <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
-    <ul>
-      <li>
-        <a
-          href="https://vuejs.org"
-          target="_blank"
-        >
-          Core Docs
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://forum.vuejs.org"
-          target="_blank"
-        >
-          Forum
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://chat.vuejs.org"
-          target="_blank"
-        >
-          Community Chat
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://twitter.com/vuejs"
-          target="_blank"
-        >
-          Twitter
-        </a>
-      </li>
-      <br>
-      <li>
-        <a
-          href="http://vuejs-templates.github.io/webpack/"
-          target="_blank"
-        >
-          Docs for This Template
-        </a>
-      </li>
-    </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li>
-        <a
-          href="http://router.vuejs.org/"
-          target="_blank"
-        >
-          vue-router
-        </a>
-      </li>
-      <li>
-        <a
-          href="http://vuex.vuejs.org/"
-          target="_blank"
-        >
-          vuex
-        </a>
-      </li>
-      <li>
-        <a
-          href="http://vue-loader.vuejs.org/"
-          target="_blank"
-        >
-          vue-loader
-        </a>
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/awesome-vue"
-          target="_blank"
-        >
-          awesome-vue
-        </a>
-      </li>
-    </ul>
-  </div>
+  <div id="vote">
+  <section class="vote hero is-success is-fullheight">
+    <div class="hero-body">
+      <div class="container has-text-centered">
+        <div class="column is-4 is-offset-4">
+          <h3 class="title has-text-grey">投票</h3>
+          <p class="subtitle has-text-grey">投票してください</p>
+          <div class="box">
+            <!-- <figure class="avatar">
+              <img src="https://placehold.it/128x128">
+            </figure> -->
+            <form v-on:submit.prevent="vote">
+
+              <div class="field">
+                <label class="label">驚き</label>
+                <div class="control has-icons-left has-icons-right">
+                  <div class="select is-fullwidth">
+                    <select v-model="odo">
+                      <option value="0">----</option>
+                      <option value="1">Team 1</option>
+                      <option value="2">Team 2</option>
+                      <option value="3">Team 3</option>
+                      <option value="4">Team 4</option>
+                      <option value="5">Team 5</option>
+                      <option value="6">Team 6</option>
+                      <option value="7">Team 7</option>
+                      <option value="8">Team 8</option>
+                    </select>
+                  </div>
+                  <span class="icon is-small is-left">
+                    <i class="fas fa-envelope"></i>
+                  </span>
+                  <span class="icon is-small is-right">
+                    <i class="fas fa-exclamation-triangle"></i>
+                  </span>
+                </div>
+                <p class="help">ユニーク、びっくり</p>
+              </div>
+
+              <div class="field">
+                <label class="label">感動</label>
+                <div class="control has-icons-left has-icons-right">
+                  <div class="select is-fullwidth">
+                    <select v-model="kan">
+                      <option value="0">----</option>
+                      <option value="1">Team 1</option>
+                      <option value="2">Team 2</option>
+                      <option value="3">Team 3</option>
+                      <option value="4">Team 4</option>
+                      <option value="5">Team 5</option>
+                      <option value="6">Team 6</option>
+                      <option value="7">Team 7</option>
+                      <option value="8">Team 8</option>
+                    </select>
+                  </div>
+                  <span class="icon is-small is-left">
+                    <i class="fas fa-envelope"></i>
+                  </span>
+                  <span class="icon is-small is-right">
+                    <i class="fas fa-exclamation-triangle"></i>
+                  </span>
+                </div>
+                <p class="help">いいね、使ってみたい</p>
+              </div>
+
+              <div class="field">
+                <label class="label">技術</label>
+                <div class="control has-icons-left has-icons-right">
+                  <div class="select is-fullwidth">
+                    <select v-model="tech">
+                      <option value="0">----</option>
+                      <option value="1">Team 1</option>
+                      <option value="2">Team 2</option>
+                      <option value="3">Team 3</option>
+                      <option value="4">Team 4</option>
+                      <option value="5">Team 5</option>
+                      <option value="6">Team 6</option>
+                      <option value="7">Team 7</option>
+                      <option value="8">Team 8</option>
+                    </select>
+                  </div>
+                  <span class="icon is-small is-left">
+                    <i class="fas fa-envelope"></i>
+                  </span>
+                  <span class="icon is-small is-right">
+                    <i class="fas fa-exclamation-triangle"></i>
+                  </span>
+                </div>
+                <p class="help">いいね、使ってみたい</p>
+              </div>
+              <button type="submit" class="button is-large is-primary is-rounded">
+                <span class="icon is-medium">
+                  <i class="fas fa-box-open"></i>
+                </span>
+                <span>投票する</span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  </div> 
 </template>
 
 <script>
+import { auth, db } from '@/firebase';
+// const ballotRef = db.ref(`/users/${auth.currentUser.uid}`);
 export default {
-  name: 'HelloWorld',
+  name: 'Vote',
   data() {
+    console.log(auth, db);
     return {
-      msg: 'Welcome to Your Vue.js App',
+      msg: '投票',
+      odo: 0,
+      kan: 0,
+      tech: 0,
+      comment: '',
+      name: '',
     };
+  },
+  beforeCreate: function(){
+    console.log("vote: beforeCreate");
+    auth.onAuthStateChanged((user) =>{
+      if(user){
+        this.user = user;
+        //TODO: bind
+      }
+    })
+  },
+  firebase: {
+    ballot: `/users/`,
+  },
+  methods:{
+    vote: function() {
+      console.log("vote form submitted.");
+    },
   },
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1, h2 {
+h1,
+h2 {
   font-weight: normal;
 }
 ul {
