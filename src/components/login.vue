@@ -17,7 +17,7 @@
                 </div>
               </div>
               <button class="button is-block is-info is-large is-fullwidth"
-                      @click="login(username)" :disabled="!username || username.length > 63">
+                      @click="login(username)" :disabled="!username || username.length > 63 || isClicked">
                       Login
               </button>
             </form>
@@ -39,21 +39,28 @@ export default {
     const username = auth.currentUser ? auth.currentUser.displayName : '';
     return {
       username,
+      isCliked: false,
     };
   },
   methods: {
     login(username) {
+      this.isCliked = true;
       // TODO: if username.length > 63, show error message
       auth.signInAnonymously()
-        .then(res => usersRef.child(res.user.uid).update({
-          name: username,
-        }))
+        .then(res => {
+          console.log(res);
+          return usersRef.child(res.user.uid).set({
+              name: username,
+          });
+        })
         .then(() => {
+          console.log("2");
           return auth.currentUser.updateProfile({
             displayName: username,
           });
         })
         .then(() => {
+          console.log(3);
           this.$router.push('/vote');
         })
         .catch((e) => {
