@@ -17,6 +17,7 @@ import { auth } from './firebase';
 Vue.config.productionTip = false;
 
 Vue.use(VueFire);
+Vue.use(Buefy);
 
 /* eslint-disable no-new */
 new Vue({
