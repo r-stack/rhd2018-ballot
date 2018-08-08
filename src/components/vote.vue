@@ -178,6 +178,7 @@ export default {
   },
   methods:{
     vote: function() {
+      const self = this;
       console.log("vote form submitted.");
       console.log(this.user.surpriseVote);
       console.log(this.user.impressionVote);
@@ -205,9 +206,19 @@ export default {
       }, function(error){
         if(error){
           console.log("Failed vote", error);
+          self.$toast.open({
+              message: 'なんか失敗しました。もう一回お願い！',
+              position: 'is-bottom',
+              type: 'is-danger',
+          });
+
         }else{
           console.log("Vote successfully.");
-          alert("Voted");
+          self.$toast.open({
+              message: '投票しました！',
+              position: 'is-bottom',
+              type: 'is-success'
+          });
         }
       })
 
@@ -219,6 +230,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.hero.is-success {
+  background: #F2F6FA;
+}
 h1,
 h2 {
   font-weight: normal;
