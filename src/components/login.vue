@@ -49,7 +49,7 @@ export default {
           name: username,
         }))
         .then(() => {
-          auth.currentUser.updateProfile({
+          return auth.currentUser.updateProfile({
             displayName: username,
           });
         })
