@@ -39,12 +39,12 @@ export default {
     const username = auth.currentUser ? auth.currentUser.displayName : '';
     return {
       username,
-      isCliked: false,
+      isClicked: false,
     };
   },
   methods: {
     login(username) {
-      this.isCliked = true;
+      this.isClicked = true;
       // TODO: if username.length > 63, show error message
       auth.signInAnonymously()
         .then(res => {
