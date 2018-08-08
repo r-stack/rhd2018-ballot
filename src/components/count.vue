@@ -35,13 +35,9 @@ export default {
   name: 'count',
   data() {
     return {
-      uRef: db.ref('users'),
       users: undefined,
       meta: undefined,
     };
-  },
-  firebase: {
-    users: db.ref('users'),
   },
   created() {
     const metaRef = db.ref('meta');
