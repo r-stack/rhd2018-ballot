@@ -2,6 +2,7 @@
   <section id="count" class="hero is-success is-fullheight">
     <div class="hero-body">
       <div class="container has-text-centered">
+        <h3 class="title has-text-grey">{{votedUserNum + " / " + userNum + "人投票済み"}}</h3>
         <div class="column is-4 is-offset-4">
           <table class="table">
             <thead>
@@ -87,7 +88,7 @@ export default {
       const teamPoints = new Array();
       for (let i = 0; i < 8; i++) {
         teamPoints[i] = {
-          teamId: (i + 1).toString(),
+          teamId: "Team" + (i + 1).toString(),
           surprisePoint: _.filter(surprisePoints, p => p === (i + 1).toString()).length,
           impressionPoint: _.filter(impressionPoints, p => p === (i + 1).toString()).length,
           techPoint: _.filter(techPoints, p => p === (i + 1).toString()).length,
@@ -98,6 +99,14 @@ export default {
         teamPoints[i].totalPoint = teamPoint.surprisePoint + teamPoint.impressionPoint + teamPoint.techPoint;
       }
       return teamPoints;
+    },
+    userNum() {
+      return this.users.length;
+    },
+    votedUserNum() {
+      const votedUsers = _.filter(this.users, user =>
+      user.surpriseVote !== undefined && user.impressionVote !== undefined && user.techVote !== undefined)
+      return votedUsers.length;
     },
   },
 };
