@@ -8,13 +8,13 @@
           ".validate": "newData.isString() && newData.val().length <= 63"
         },
         "surpriseVote": {
-          ".validate": "newData.isNumber()"
+          ".validate": "newData.isString()"
         },
         "impressionVote": {
-          ".validate": "newData.isNumber()"
+          ".validate": "newData.isString()"
         },
         "techVote": {
-          ".validate": "newData.isNumber()"
+          ".validate": "newData.isString()"
         },
         "admin": {
           ".validate": "newData.isBoolean()"
