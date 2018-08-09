@@ -89,7 +89,9 @@
                 </div>
                 <p class="help">技術的にすごい、完成度がすごい</p>
               </div>
-              <button type="submit" class="button is-large is-primary is-rounded" :disabled="!meta.isOpen">
+              <button type="submit"
+                      class="button is-large is-primary is-rounded"
+                      :disabled="!meta.isOpen">
                 <span class="icon is-medium">
                   <i class="fas fa-box-open"></i>
                 </span>
@@ -101,12 +103,12 @@
       </div>
     </div>
   </section>
-  </div> 
+  </div>
 </template>
 
 <script>
 import { auth, db } from '@/firebase';
-const ballotRef = db.ref(`/users/`);
+
 export default {
   name: 'Vote',
   data() {
@@ -116,21 +118,21 @@ export default {
       comment: '',
       name: '',
       user: {
-        'surpriseVote':"0",
-        'impressionVote':"0",
-        "techVote":"0",
+        surpriseVote: '0',
+        impressionVote: '0',
+        techVote: '0',
       },
-      meta: {isOpen: false},
+      meta: { isOpen: false },
     };
   },
-  beforeCreate: function(){
-    console.log("vote: beforeCreate");
-    auth.onAuthStateChanged((user) =>{
-      if(user){
+  beforeCreate() {
+    console.log('vote: beforeCreate');
+    auth.onAuthStateChanged((user) => {
+      if (user) {
         this.user = user;
-        //TODO: bind
+        // TODO: bind
       }
-    })
+    });
   },
   created() {
     const metaRef = db.ref('meta');
@@ -147,24 +149,23 @@ export default {
         reject(e);
       });
     })
-    .then(() => new Promise((resolve, reject) => {
-      this.$bindAsObject('meta', metaRef, () => {
-        reject(Error('cannot bind meta'));
-      }, () => {
-        resolve();
-      });
-    }))
-    .then(() => new Promise((resolve, reject) => {
-      this.userRef = db.ref('users/' + auth.currentUser.uid)
-      this.$bindAsObject('user', this.userRef, () => {
-        reject(Error('cannot bind user'));
-      }, () => {
-        resolve();
-      });
-    }))
-    
-    ;
+      .then(() => new Promise((resolve, reject) => {
+        this.$bindAsObject('meta', metaRef, () => {
+          reject(Error('cannot bind meta'));
+        }, () => {
+          resolve();
+        });
+      }))
+      .then(() => new Promise((resolve, reject) => {
+        this.userRef = db.ref(`users/${auth.currentUser.uid}`);
+        this.$bindAsObject('user', this.userRef, () => {
+          reject(Error('cannot bind user'));
+        }, () => {
+          resolve();
+        });
+      }))
 
+    ;
   },
   mounted() {
     this.createdPromise
@@ -176,82 +177,79 @@ export default {
         console.error(e);
       });
   },
-  methods:{
-    vote: function() {
-      console.log("vote form submitted.");
+  methods: {
+    vote() {
+      console.log('vote form submitted.');
       console.log(this.user.surpriseVote);
       console.log(this.user.impressionVote);
       console.log(this.user.techVote);
       const self = this;
-      if(this.meta && !this.meta.isOpen){
-        console.log("isOpen=", this.meta.isOpen);
+      if (this.meta && !this.meta.isOpen) {
+        console.log('isOpen=', this.meta.isOpen);
         this.$toast.open({
-              message: '現在投票はできません',
-              position: 'is-bottom',
-              type: 'is-primary',
+          message: '現在投票はできません',
+          position: 'is-bottom',
+          type: 'is-primary',
         });
         return;
       }
-      if(!this.user.surpriseVote || this.user.surpriseVote === '0'){
-        console.log("surpriseVote is required.");
+      if (!this.user.surpriseVote || this.user.surpriseVote === '0') {
+        console.log('surpriseVote is required.');
         this.$toast.open({
-              message: '全部入力してください',
-              position: 'is-bottom',
-              type: 'is-danger',
+          message: '全部入力してください',
+          position: 'is-bottom',
+          type: 'is-danger',
         });
         return;
       }
-      if(!this.user.impressionVote || this.user.impressionVote === '0'){
-        console.log("impressionVote is required.");
+      if (!this.user.impressionVote || this.user.impressionVote === '0') {
+        console.log('impressionVote is required.');
         this.$toast.open({
-              message: '全部入力してください',
-              position: 'is-bottom',
-              type: 'is-danger',
+          message: '全部入力してください',
+          position: 'is-bottom',
+          type: 'is-danger',
         });
         return;
       }
-      if(!this.user.techVote || this.user.techVote === '0'){
-        console.log("techVote is required.");
+      if (!this.user.techVote || this.user.techVote === '0') {
+        console.log('techVote is required.');
         this.$toast.open({
-              message: '全部入力してください',
-              position: 'is-bottom',
-              type: 'is-danger',
+          message: '全部入力してください',
+          position: 'is-bottom',
+          type: 'is-danger',
         });
         return;
       }
-      if(!this.userRef){
-        console.log("no this.userRef");
+      if (!this.userRef) {
+        console.log('no this.userRef');
         this.$toast.open({
-              message: '1秒後にもっかい投票してね',
-              position: 'is-bottom',
-              type: 'is-danger',
+          message: '1秒後にもっかい投票してね',
+          position: 'is-bottom',
+          type: 'is-danger',
         });
         return;
       }
       this.userRef.update({
-        'surpriseVote': this.user.surpriseVote,
-        'impressionVote': this.user.impressionVote,
-        'techVote': this.user.techVote,
-      }, function(error){
-        if(error){
-          console.log("Failed vote", error);
+        surpriseVote: this.user.surpriseVote,
+        impressionVote: this.user.impressionVote,
+        techVote: this.user.techVote,
+      }, (error) => {
+        if (error) {
+          console.log('Failed vote', error);
           self.$toast.open({
-              message: 'なんか失敗しました。もう一回お願い！',
-              position: 'is-bottom',
-              type: 'is-danger',
+            message: 'なんか失敗しました。もう一回お願い！',
+            position: 'is-bottom',
+            type: 'is-danger',
           });
-
-        }else{
-          console.log("Vote successfully.");
+        } else {
+          console.log('Vote successfully.');
           self.$toast.open({
-              message: '投票しました！',
-              position: 'is-bottom',
-              type: 'is-success'
+            message: '投票しました！',
+            position: 'is-bottom',
+            type: 'is-success',
           });
         }
-      })
-
-
+      });
     },
   },
 };

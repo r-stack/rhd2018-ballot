@@ -13,7 +13,7 @@
                 <th>技術点</th>
                 <th>合計点</th>
               </tr>
-              <tr v-for="team in teams">
+              <tr v-for="team in teams" :key="team.teamId">
                 <td>{{team.teamId}}</td>
                 <td>{{team.surprisePoint}}</td>
                 <td>{{team.impressionPoint}}</td>
@@ -29,8 +29,8 @@
 </template>
 
 <script>
-import { auth, db } from './../firebase';
 import _ from 'underscore';
+import { auth, db } from './../firebase';
 
 export default {
   name: 'count',
@@ -85,18 +85,20 @@ export default {
       const surprisePoints = _.pluck(this.users, 'surpriseVote');
       const impressionPoints = _.pluck(this.users, 'impressionVote');
       const techPoints = _.pluck(this.users, 'techVote');
-      const teamPoints = new Array();
+      const teamPoints = [];
       for (let i = 0; i < 8; i++) {
         teamPoints[i] = {
-          teamId: "Team" + (i + 1).toString(),
+          teamId: `Team${(i + 1).toString()}`,
           surprisePoint: _.filter(surprisePoints, p => p === (i + 1).toString()).length,
           impressionPoint: _.filter(impressionPoints, p => p === (i + 1).toString()).length,
           techPoint: _.filter(techPoints, p => p === (i + 1).toString()).length,
-        }
+        };
       }
       for (let i = 0; i < 8; i++) {
-        let teamPoint = teamPoints[i]
-        teamPoints[i].totalPoint = teamPoint.surprisePoint + teamPoint.impressionPoint + teamPoint.techPoint;
+        const teamPoint = teamPoints[i];
+        teamPoints[i].totalPoint = teamPoint.surprisePoint
+                + teamPoint.impressionPoint
+                + teamPoint.techPoint;
       }
       return teamPoints;
     },
@@ -105,7 +107,9 @@ export default {
     },
     votedUserNum() {
       const votedUsers = _.filter(this.users, user =>
-      user.surpriseVote !== undefined && user.impressionVote !== undefined && user.techVote !== undefined)
+        user.surpriseVote !== undefined
+          && user.impressionVote !== undefined
+          && user.techVote !== undefined);
       return votedUsers.length;
     },
   },
