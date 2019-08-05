@@ -29,7 +29,7 @@ const router = new Router({
       component: () => import(/* webpackChunkName: "about" */ './views/About.vue'),
     },
     {
-      path: '/',
+      path: '/login',
       name: 'Login',
       component: login,
     },
@@ -53,7 +53,7 @@ const router = new Router({
     },
     {
       path: '*',
-      redirect: '/',
+      redirect: '/soon',
     },
   ],
 });

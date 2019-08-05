@@ -57,14 +57,14 @@ export default {
       });
     })
       .then(() => new Promise((resolve, reject) => {
-        this.$bindAsArray('users', usersRef, () => {
+        this.$rtdbBind('users', usersRef, () => {
           reject(Error('cannot bind users'));
         }, () => {
           resolve();
         });
       }))
       .then(() => new Promise((resolve, reject) => {
-        this.$bindAsObject('meta', metaRef, () => {
+        this.$rtdbBind('meta', metaRef, () => {
           reject(Error('cannot bind meta'));
         }, () => {
           resolve();

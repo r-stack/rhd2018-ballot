@@ -127,45 +127,18 @@ export default {
   },
   beforeCreate() {
     console.log('vote: beforeCreate');
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        this.user = user;
-        // TODO: bind
-      }
-    });
   },
   created() {
+    console.log('vote: created');
     const metaRef = db.ref('meta');
-    this.createdPromise = new Promise((resolve, reject) => {
-      auth.onAuthStateChanged((user) => {
-        if (user) {
-          // if logged in
-          resolve();
-        } else {
-          // if not
-          reject(Error('not logged in'));
-        }
-      }, (e) => {
-        reject(e);
-      });
-    })
-      .then(() => new Promise((resolve, reject) => {
-        this.$bindAsObject('meta', metaRef, () => {
-          reject(Error('cannot bind meta'));
-        }, () => {
-          resolve();
-        });
-      }))
-      .then(() => new Promise((resolve, reject) => {
-        this.userRef = db.ref(`users/${auth.currentUser.uid}`);
-        this.$bindAsObject('user', this.userRef, () => {
-          reject(Error('cannot bind user'));
-        }, () => {
-          resolve();
-        });
-      }))
-
-    ;
+    this.createdPromise = new Promise(async (resolve, reject) => {
+      console.log('vote: bind metaRef');
+      await this.$rtdbBind('meta', metaRef);
+      console.log('vote: bind userRef');
+      this.userRef = db.ref(`users/${auth.currentUser.uid}`);
+      await this.$rtdbBind('user', this.userRef);
+      resolve();
+    });
   },
   mounted() {
     this.createdPromise
