@@ -3,11 +3,16 @@
     <div class="hero-body">
       <div class="container has-text-centered">
         <h3 class="title has-text-grey">{{votedUserNum + " / " + userNum + "人投票済み"}}</h3>
+        <div v-if="isOpen">
+
+<canvas ref="canvas"></canvas>
+
+
         <div class="column is-4 is-offset-4">
           <table class="table">
             <thead>
               <tr>
-                <th>Team#</th>
+                <th>Party#</th>
                 <th>新規性</th>
                 <th>ゲーム化度</th>
                 <th>完成度</th>
@@ -23,101 +28,68 @@
             </thead>
           </table>
         </div>
+        </div><!-- v-id -->
       </div>
     </div>
   </section>
 </template>
 
 <script>
-import _ from "underscore";
-import { auth, db } from "./../firebase";
+import _ from 'underscore';
+import { auth, db } from './../firebase';
 
 export default {
-  name: "count",
+  name: 'count',
   data() {
     return {
       users: undefined,
-      meta: undefined
+      meta: undefined,
     };
   },
   created() {
     const metaRef = db.ref('meta');
     const usersRef = db.ref('users');
-    this.createdPromise = new Promise((resolve, reject) => {
-      auth.onAuthStateChanged(
-        user => {
-          if (user) {
-            // if logged in
-            resolve();
-          } else {
-            // if not
-            reject(Error('not logged in'));
-          }
-        },
-        e => {
-          reject(e);
-        }
-      );
-    })
-      .then(
-        () =>
-          new Promise((resolve, reject) => {
-            this.$rtdbBind(
-              'users',
-              usersRef,
-              () => {
-                reject(Error('cannot bind users'));
-              },
-              () => {
-                resolve();
-              }
-            );
-          })
-      )
-      .then(
-        () =>
-          new Promise((resolve, reject) => {
-            this.$rtdbBind(
-              'meta',
-              metaRef,
-              () => {
-                reject(Error('cannot bind meta'));
-              },
-              () => {
-                resolve();
-              }
-            );
-          })
-      );
+    this.createdPromise = new Promise(async (resolve, reject) => {
+      console.log('count: bind metaRef');
+      await this.$rtdbBind('meta', metaRef);
+      console.log('count: bind userRef');
+      await this.$rtdbBind('users', usersRef);
+      resolve();
+    });
   },
   mounted() {
     this.createdPromise
       .then(() => {
         console.log('ok');
       })
-      .catch(e => {
+      .catch((e) => {
         console.error(e);
       });
+
+    const canvas = this.$refs.canvas;
+    console.log('count:mounted()', canvas);
+    // this.PIXIApp = new PIXI.Application(
   },
   computed: {
     teams() {
-      const surprisePoints = _.pluck(this.users, "surpriseVote");
-      const impressionPoints = _.pluck(this.users, "impressionVote");
-      const techPoints = _.pluck(this.users, "techVote");
+      const surprisePoints = _.pluck(this.users, 'surpriseVote');
+      const impressionPoints = _.pluck(this.users, 'impressionVote');
+      const techPoints = _.pluck(this.users, 'techVote');
       const teamPoints = [];
-      for (let i = 0; i < 8; i++) {
+      const teamLabel = 'ABCDEFG';
+      for (let i = 0; i < teamLabel.length; i++) {
         teamPoints[i] = {
-          teamId: `Team${(i + 1).toString()}`,
-          surprisePoint: _.filter(surprisePoints, p => p === (i + 1).toString())
+          teamId: `Party ${teamLabel[i]}`,
+          surprisePoint: _.filter(surprisePoints, (p) => p === (i + 1).toString())
             .length,
           impressionPoint: _.filter(
             impressionPoints,
-            p => p === (i + 1).toString()
+            (p) => p === (i + 1).toString(),
           ).length,
-          techPoint: _.filter(techPoints, p => p === (i + 1).toString()).length
+          techPoint: _.filter(techPoints, (p) => p === (i + 1).toString()).length,
         };
       }
-      for (let i = 0; i < 8; i++) {
+      for (let i = 0; i < teamLabel.length; i++) {
         const teamPoint = teamPoints[i];
         teamPoints[i].totalPoint =
           teamPoint.surprisePoint +
@@ -126,20 +98,28 @@ export default {
       }
       return teamPoints;
     },
+    isOpen() {
+      console.log('count:isOpen', this.meta);
+      return this.meta ? this.meta.isOpen : false;
+    },
     userNum() {
-      return this.users.length;
+      if (this.users) {
+        return Object.keys(this.users).length;
+      } else {
+        return 0;
+      }
     },
     votedUserNum() {
       const votedUsers = _.filter(
         this.users,
-        user =>
+        (user) =>
           user.surpriseVote !== undefined &&
           user.impressionVote !== undefined &&
-          user.techVote !== undefined
+          user.techVote !== undefined,
       );
       return votedUsers.length;
-    }
-  }
+    },
+  },
 };
 </script>
 

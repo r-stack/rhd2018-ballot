@@ -13,19 +13,18 @@
             <form v-on:submit.prevent="vote">
 
               <div class="field">
-                <label class="label">驚き</label>
+                <label class="label">新規性</label>
                 <div class="control has-icons-left has-icons-right">
                   <div class="select is-fullwidth">
                     <select v-model="user.surpriseVote">
                       <option value="0">----</option>
-                      <option value="1">Team 1</option>
-                      <option value="2">Team 2</option>
-                      <option value="3">Team 3</option>
-                      <option value="4">Team 4</option>
-                      <option value="5">Team 5</option>
-                      <option value="6">Team 6</option>
-                      <option value="7">Team 7</option>
-                      <option value="8">Team 8</option>
+                      <option value="1">Party A</option>
+                      <option value="2">Party B</option>
+                      <option value="3">Party C</option>
+                      <option value="4">Party D</option>
+                      <option value="5">Party E</option>
+                      <option value="6">Party F</option>
+                      <option value="7">Party G</option>
                     </select>
                   </div>
                   <span class="icon is-small is-left">
@@ -35,23 +34,22 @@
                     <i class="fas fa-exclamation-triangle"></i>
                   </span>
                 </div>
-                <p class="help">ユニーク、びっくり</p>
+                <p class="help">アイデアが革新的でユニークか</p>
               </div>
 
               <div class="field">
-                <label class="label">感動</label>
+                <label class="label">ゲーム化度</label>
                 <div class="control has-icons-left has-icons-right">
                   <div class="select is-fullwidth">
                     <select v-model="user.impressionVote">
                       <option value="0">----</option>
-                      <option value="1">Team 1</option>
-                      <option value="2">Team 2</option>
-                      <option value="3">Team 3</option>
-                      <option value="4">Team 4</option>
-                      <option value="5">Team 5</option>
-                      <option value="6">Team 6</option>
-                      <option value="7">Team 7</option>
-                      <option value="8">Team 8</option>
+                      <option value="1">Party A</option>
+                      <option value="2">Party B</option>
+                      <option value="3">Party C</option>
+                      <option value="4">Party D</option>
+                      <option value="5">Party E</option>
+                      <option value="6">Party F</option>
+                      <option value="7">Party G</option>
                     </select>
                   </div>
                   <span class="icon is-small is-left">
@@ -61,23 +59,22 @@
                     <i class="fas fa-exclamation-triangle"></i>
                   </span>
                 </div>
-                <p class="help">いいね、使ってみたい</p>
+                <p class="help">ゲームっぽい要素をうまく取り込んで課題を解決</p>
               </div>
 
               <div class="field">
-                <label class="label">技術</label>
+                <label class="label">完成度</label>
                 <div class="control has-icons-left has-icons-right">
                   <div class="select is-fullwidth">
                     <select v-model="user.techVote">
                       <option value="0">----</option>
-                      <option value="1">Team 1</option>
-                      <option value="2">Team 2</option>
-                      <option value="3">Team 3</option>
-                      <option value="4">Team 4</option>
-                      <option value="5">Team 5</option>
-                      <option value="6">Team 6</option>
-                      <option value="7">Team 7</option>
-                      <option value="8">Team 8</option>
+                      <option value="1">Party A</option>
+                      <option value="2">Party B</option>
+                      <option value="3">Party C</option>
+                      <option value="4">Party D</option>
+                      <option value="5">Party E</option>
+                      <option value="6">Party F</option>
+                      <option value="7">Party G</option>
                     </select>
                   </div>
                   <span class="icon is-small is-left">
@@ -87,7 +84,7 @@
                     <i class="fas fa-exclamation-triangle"></i>
                   </span>
                 </div>
-                <p class="help">技術的にすごい、完成度がすごい</p>
+                <p class="help">デモがキチンと動くか、コンセプトが実現しそうか</p>
               </div>
               <button type="submit"
                       class="button is-large is-primary is-rounded"
