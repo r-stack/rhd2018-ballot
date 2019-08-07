@@ -5,7 +5,6 @@
         <h3 class="title has-text-grey">{{votedUserNum + " / " + userNum + "人投票済み"}}</h3>
         <div v-if="isOpen">
 
-<canvas ref="canvas"></canvas>
 
 
         <div class="column is-4 is-offset-4">
@@ -65,10 +64,8 @@ export default {
       .catch((e) => {
         console.error(e);
       });
-
     const canvas = this.$refs.canvas;
     console.log('count:mounted()', canvas);
-    // this.PIXIApp = new PIXI.Application(
   },
   computed: {
     teams() {
