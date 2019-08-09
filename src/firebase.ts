@@ -12,3 +12,13 @@ const firebaseApp = firebase.initializeApp(config);
 
 export const auth = firebaseApp.auth();
 export const db = firebaseApp.database();
+
+
+
+export async function checkCurrentUser(): Promise<firebase.User | null> {
+  return new Promise((resolve, reject) => {
+    auth.onAuthStateChanged((user) => {
+      resolve(user);
+    });
+  });
+}

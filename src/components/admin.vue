@@ -5,7 +5,7 @@
         <div class="column is-4 is-offset-4">
           <h3 class="title has-text-grey">Admin console</h3>
           <div class="field">
-            <input id="statusSwitch" type="checkbox" class="switch is-rtl" v-model="statusSwitch">
+            <input id="statusSwitch" type="checkbox" class="switch is-rtl" v-model="statusSwitch" />
             <label for="statusSwitch">投票受付</label>
           </div>
         </div>
@@ -25,42 +25,27 @@ export default {
       meta: undefined,
     };
   },
-  created() {
+  async created() {
     const metaRef = db.ref('meta');
-    this.createdPromise = new Promise((resolve, reject) => {
-      auth.onAuthStateChanged((user) => {
-        if (user) {
-          // if logged in
-          resolve();
-        } else {
-          // if not
-          reject(Error('not logged in'));
-        }
-      }, (e) => {
-        reject(e);
-      });
-    })
-      .then(() => new Promise((resolve, reject) => {
-        this.$bindAsObject('meta', metaRef, () => {
-          reject(Error('cannot bind meta'));
-        }, () => {
-          resolve();
-        });
-      }));
+    await this.$rtdbBind('meta', metaRef);
+    this.statusSwitch = this.meta.isOpen;
+    console.log('admin.created(): complete');
   },
-  mounted() {
-    this.createdPromise
-      .then(() => {
-        console.log(this.meta.isOpen);
-        this.statusSwitch = this.meta.isOpen;
-      })
-      .catch((e) => {
-        console.error(e);
-      });
+  async mounted() {
+    console.log('admin.mounted()', this.meta);
   },
   watch: {
-    statusSwitch(newVal) {
-      this.$firebaseRefs.meta.child('isOpen').set(newVal);
+    async statusSwitch(newVal) {
+      try {
+        await this.$firebaseRefs.meta.child('isOpen').set(newVal);
+      } catch (e) {
+        console.log(e);
+        this.$toast.open({
+          message: e,
+          position: 'is-bottom',
+          type: 'is-primary',
+        });
+      }
     },
   },
 };
@@ -68,15 +53,17 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-html,body {
-  font-family: 'Open Sans', serif;
+html,
+body {
+  font-family: "Open Sans", serif;
   font-size: 14px;
   font-weight: 300;
 }
 .hero.is-success {
-  background: #F2F6FA;
+  background: #f2f6fa;
 }
-.hero .nav, .hero.is-success .nav {
+.hero .nav,
+.hero.is-success .nav {
   -webkit-box-shadow: none;
   box-shadow: none;
 }

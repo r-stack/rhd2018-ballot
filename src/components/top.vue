@@ -6,7 +6,7 @@
                 <div class="container">
                     <div class="navbar-brand">
                         <a class="navbar-item" href="../">
-                          <h1>R-Stack Hackday 2018</h1>
+                          <h1>R-Stack Hackday 2019</h1>
                         </a>
                         <span class="navbar-burger burger" data-target="navbarMenu">
                             <span></span>
@@ -17,7 +17,7 @@
                     <div id="navbarMenu" class="navbar-menu">
                         <div class="navbar-end">
                             <span class="navbar-item">
-                                <a class="button is-white is-outlined" href="#">
+                                <a class="button is-white is-outlined" href="/">
                                     <span class="icon">
                                         <i class="fa fa-home"></i>
                                     </span>
@@ -37,7 +37,7 @@
                             Coming Soon
                         </h1>
                         <h2 class="subtitle">
-                            本サイトは R-Stack Hackday 2018 で構築する投票用サイトです。発表開始の16:00までにリリースできたらいいな。
+                            本サイトは R-Stack Hackday 2019 で構築する投票用サイトです。発表開始の16:00までにリリースできたらいいな。
                         </h2>
                         <div class="box">
                             <div class="field is-grouped">
